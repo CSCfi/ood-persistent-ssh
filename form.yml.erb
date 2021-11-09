@@ -1,0 +1,37 @@
+<% require "/ood/deps/util/attributes/csc_smart_attributes" -%>
+---
+cluster: "puhti"
+cacheable: false
+attributes:
+  csc_cores:
+      value: 1
+      max: 4
+      cacheable: false
+  csc_nvme:
+      value: 10
+  csc_slurm_partition:
+    value: "interactive"
+    fixed: true
+  csc_memory:
+      min: 2
+      value: 2
+      cacheable: false
+  csc_time:
+    value: "1-00:00:00"
+    cacheable: false
+  tmuxconf:
+    label: "Use custom tmux.conf"
+    help: "If not selected, user .tmux.conf will be ignored"
+    widget: "check_box"
+
+form:
+  - csc_slurm_project
+  - csc_slurm_partition
+  - csc_header_resources
+  - csc_cores
+  - csc_memory
+  - csc_nvme
+  - csc_time
+  - csc_header_settings
+  - tmuxconf
+  - csc_slurm_limits

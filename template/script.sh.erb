@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+export t=<%= context.csc_time %>
+
+
+touch /tmp/$USER/$SLURM_JOB_ID/persist_ssh
+if [[ -z "$( echo $t | grep -- "-" )" ]]; then
+    num_sep=$(echo "$t" | awk -F: '{print NF-1}')
+    if [[ "$num_sep" -eq "0" ]];then
+        DUR=$(( $t * 60))
+    elif [[ "$num_sep" -eq "1" ]];then
+        DUR=$( echo "$t" | awk -F: '{ print ($1 * 60) + $2 }')
+    elif [[ "$num_sep" -eq "2" ]];then
+        DUR=$( echo "$t" | awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }')
+    fi    
+else
+    days=$(echo "$t" | cut -d "-" -f1)
+    other=$(echo "$t" | cut -d "-" -f2)
+    d_o=$(echo "$other" | awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }')
+    DUR=$(($days*24*3600  + $d_o))
+fi
+
+
+<%- if context.tmuxconf == "1" -%> 
+    touch /tmp/$USER/$SLURM_JOB_ID/custom_tmux_conf
+<%- end -%>
+
+echo "SLEEPING FOR $DUR SECONDS, SET TIME WAS $t"
+sleep $DUR

@@ -1,0 +1,6 @@
+---
+name: SHELL
+category: "Tools"
+role: batch_connect
+description: |
+    Persistent shell
