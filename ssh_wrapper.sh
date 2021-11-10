@@ -2,7 +2,7 @@
 # REPO VERSION
 
 ood_instance=$CSC_OOD_ENVIRONMENT
-tmux_path=/appl/opt/ood/$ood_instance/tmux/bin/
+tmux_path=/appl/opt/ood/$ood_instance/soft/tmux/bin/
 
 
 cmd="test -f /tmp/\$USER/\$SLURM_JOB_ID/persist_ssh && \
