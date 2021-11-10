@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function check_tty(){
-    tmux_tty=$(ps -fu $USER | grep tmux | grep  "$SLURM_JOB_ID" | grep -v "grep" | grep pts | awk '{ print $6 }')
+    tmux_tty="$(ps -fu $USER | grep tmux | grep  "$SLURM_JOB_ID" | grep -v "grep" | grep pts | awk '{ print $6 }')"
     if [[ ! -z "$tmux_tty" ]];then                                                                               
         tmux set-option -g display-time 600000
         secs="$(( $end_time - $current_time))"
@@ -10,7 +10,9 @@ function check_tty(){
         m=$(( ( secs / 60 ) % 60 ))
         s=$(( secs % 60 ))
         time_msg="$d days $h hours and $m minutes"
-        tmux display-message -c /dev/$tmux_tty " INFO: $time_msg left of job runtime"
+        while IFS= read -r tx ; do
+            tmux display-message -c /dev/$tx " INFO: $time_msg left of job runtime"
+        done <<< "$tmux_tty"
         return 0
     else
         return 1
