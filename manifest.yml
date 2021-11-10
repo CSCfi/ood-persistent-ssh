@@ -1,6 +1,7 @@
 ---
-name: SHELL
+name: Interactive shell
 category: "Tools"
+icon: fa://terminal
 role: batch_connect
 description: |
-    Interactive shell
+    Interacive shell
