@@ -34,7 +34,7 @@ function warn(){
         /appl/opt/ood/$SLURM_OOD_ENV/tmux/bin/tmux display-message  -c /dev/$tmux_tty "WARNING: Less than $1 minutes left for job." 
     fi
 }
-
+echo "$((  $(date +%s) + $DUR ))" > /tmp/$USER/$SLURM_JOB_ID/shell_job_end_time
 if [[ $DUR -gt 660  ]];then
     echo "SLEEPING FOR $(($DUR - 660 )) SECONDS, SET TIME WAS $t"
     sleep $(($DUR - 660 ))
