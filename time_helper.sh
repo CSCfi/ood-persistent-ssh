@@ -5,7 +5,7 @@ function check_tty(){
     if [[ ! -z "$tmux_tty" ]];then                                                                               
         tmux set-option -g display-time 600000
         time_msg="$(date --date "@$(($end_time-$current_time))" "+%d days %H hours and %M minutes")"
-        tmux display-message " INFO: $time_msg left of job runtime"
+        tmux display-message -c /dev/$tmux_tty " INFO: $time_msg left of job runtime"
         return 0
     else
         return 1
