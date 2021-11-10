@@ -4,7 +4,7 @@ export t=<%= context.csc_time %>
 
 
 touch /tmp/$USER/$SLURM_JOB_ID/persist_ssh
-if [[ -z "$( echo $t | grep -- "-" )" ]]; then
+if [[ -z "$( echo $t | grep -- "-" )" ]]; then
     num_sep=$(echo "$t" | awk -F: '{print NF-1}')
     if [[ "$num_sep" -eq "0" ]];then
         DUR=$(( $t * 60))
