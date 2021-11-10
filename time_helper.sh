@@ -4,7 +4,12 @@ function check_tty(){
     tmux_tty=$(ps -fu $USER | grep tmux | grep  "$SLURM_JOB_ID" | grep -v "grep" | grep pts | awk '{ print $6 }')
     if [[ ! -z "$tmux_tty" ]];then                                                                               
         tmux set-option -g display-time 600000
-        time_msg="$(date --date "@$(($end_time-$current_time))" "+%d days %H hours and %M minutes")"
+        secs="$(( $end_time - $current_time))"
+        d=$(( secs / 86400 ))
+        h=$(( (secs / 3600 ) % 24 ))
+        m=$(( ( secs / 60 ) % 60 ))
+        s=$(( secs % 60 ))
+        time_msg="$d days $h hours and $m minutes"
         tmux display-message -c /dev/$tmux_tty " INFO: $time_msg left of job runtime"
         return 0
     else
