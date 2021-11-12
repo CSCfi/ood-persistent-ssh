@@ -28,6 +28,8 @@ attributes:
       The shell / ssh session will stay open and any programs started there will stay running
       even if internet connection is lost or the browser tab is closed. The session will end if
       it's explicitly closed by the user, e.g running `exit` or pressing `Ctrl+D`.
+  csc_reset_cache:
+    app: "sys/ood-persistent-ssh"
 
 form:
   - csc_extra_desc
@@ -40,4 +42,5 @@ form:
   - csc_time
   - csc_header_settings
   - tmuxconf
+  - csc_reset_cache
   - csc_slurm_limits
