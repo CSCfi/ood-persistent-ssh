@@ -18,7 +18,7 @@ cmd="test -f /tmp/\$USER/\$SLURM_JOB_ID/persist_ssh && \
     || eval \"tmux \$_CSC_TMUX_CONF new-session -s \$SLURM_JOB_ID\" \
 ;} \
 || bash"
-if [[ ! -f /appl/opt/ood/$ood_instance/tmux/bin/tmux ]];then
+if [[ ! -f $tmux_path/tmux ]];then
     RED='\033[0;31m'
     NC='\033[0m'
 
@@ -26,7 +26,7 @@ if [[ ! -f /appl/opt/ood/$ood_instance/tmux/bin/tmux ]];then
     if [[ -z "$ood_instance" ]];then
         echo "SSH wrapper failed, failed to resolve OOD instance CSC_OOD_ENVIRONMENT empty" | logger 
     else
-        echo "SSH wrapper failed, path /appl/opt/ood/$ood_instance/tmux/bin/tmux does not exist" | logger
+        echo "SSH wrapper failed, executable $tmux_path/tmux does not exist" | logger
     fi
     /usr/bin/ssh $@ 
 elif [[ -z "$(echo "$@" | grep 'puhti'  )" ]]; then 
