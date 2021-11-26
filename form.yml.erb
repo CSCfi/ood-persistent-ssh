@@ -30,6 +30,12 @@ attributes:
       it's explicitly closed by the user, e.g running `exit` or pressing `Ctrl+D`.
   csc_reset_cache:
     app: "sys/ood-persistent-ssh"
+  csc_slurm_limits:
+    data:
+      partition: "interactive"
+      limits:
+        interactive:
+          cpu: 4
 
 form:
   - csc_extra_desc
