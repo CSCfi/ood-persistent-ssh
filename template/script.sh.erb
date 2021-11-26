@@ -4,7 +4,7 @@ export t=<%= context.csc_time %>
 
 
 touch /tmp/$USER/$SLURM_JOB_ID/persist_ssh
-if [[ -z "$( echo $t | grep -- "-" )" ]]; then
+if [[ -z "$( echo $t | grep -- "-" )" ]]; then
     num_sep=$(echo "$t" | awk -F: '{print NF-1}')
     if [[ "$num_sep" -eq "0" ]];then
         DUR=$(( $t * 60))
@@ -25,5 +25,30 @@ fi
     touch /tmp/$USER/$SLURM_JOB_ID/custom_tmux_conf
 <%- end -%>
 
-echo "SLEEPING FOR $DUR SECONDS, SET TIME WAS $t"
-sleep $DUR
+
+function warn(){
+    tmux_tty=$(ps -fu $USER | grep tmux | grep  "$SLURM_JOB_ID" | grep -v "grep" | grep pts | awk '{ print $6 }')
+    if [[ ! -z "$tmux_tty" ]];then
+        echo "WARNING ABOUT END OF JOB IN $1 min"
+        /appl/opt/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux set-option -g display-time 60000
+        /appl/opt/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux display-message  -c /dev/$tmux_tty "WARNING: Less than $1 minutes left for job." 
+    fi
+}
+echo "$((  $(date +%s) + $DUR ))" > /tmp/$USER/$SLURM_JOB_ID/shell_job_end_time
+if [[ $DUR -gt 660  ]];then
+    echo "SLEEPING FOR $(($DUR - 660 )) SECONDS, SET TIME WAS $t"
+    sleep $(($DUR - 660 ))
+    warn 10
+    sleep 300
+    warn 5
+    sleep 240
+    warn 1
+    sleep 90
+
+else
+    echo "JOB IS SHORTER THAN 11 MINUTES, NO WARNINGS WILL BE ISSUED"
+    echo "SLEEPING FOR $(($DUR - 30 )) SECONDS, SET TIME WAS $t"
+    sleep $(( $DUR - 30 ))
+fi
+# Completed normally
+echo "Job completed normally" > <%= session.staged_root.join("job_exit_reason") %>

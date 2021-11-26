@@ -1,6 +1,8 @@
 ---
-name: SHELL
+name: Interactive shell
 category: "Tools"
+icon: fa://terminal
 role: batch_connect
 description: |
-    Persistent shell
+    Interacive shell which persists as long as the job is running.
+    

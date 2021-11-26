@@ -17,14 +17,28 @@ attributes:
       value: 2
       cacheable: false
   csc_time:
-    value: "1-00:00:00"
+    value: "08:00:00"
     cacheable: false
   tmuxconf:
     label: "Use custom tmux.conf"
     help: "If not selected, user .tmux.conf will be ignored"
     widget: "check_box"
+  csc_extra_desc:
+    desc: |
+      The shell / ssh session will stay open and any programs started there will stay running
+      even if internet connection is lost or the browser tab is closed. The session will end if
+      it's explicitly closed by the user, e.g running `exit` or pressing `Ctrl+D`.
+  csc_reset_cache:
+    app: "sys/ood-persistent-ssh"
+  csc_slurm_limits:
+    data:
+      partition: "interactive"
+      limits:
+        interactive:
+          cpu: 4
 
 form:
+  - csc_extra_desc
   - csc_slurm_project
   - csc_slurm_partition
   - csc_header_resources
@@ -34,4 +48,5 @@ form:
   - csc_time
   - csc_header_settings
   - tmuxconf
+  - csc_reset_cache
   - csc_slurm_limits

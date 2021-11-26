@@ -1,8 +1,8 @@
 #!/bin/bash
-
+# REPO VERSION
 
 ood_instance=$CSC_OOD_ENVIRONMENT
-tmux_path=/appl/opt/ood/$ood_instance/tmux/bin/
+tmux_path=/appl/opt/ood/$ood_instance/soft/tmux/bin/
 
 
 cmd="test -f /tmp/\$USER/\$SLURM_JOB_ID/persist_ssh && \
@@ -13,7 +13,7 @@ cmd="test -f /tmp/\$USER/\$SLURM_JOB_ID/persist_ssh && \
         export _CSC_TMUX_CONF='-f <(echo -e \"set -g status off\nsetw -g mouse on\"    )'  \
     ;} ; \
     { \
-        tmux ls 2>/dev/null && tmux attach -t \$SLURM_JOB_ID  \
+        tmux ls 2>/dev/null && /appl/opt/ood/$ood_instance/soft/tmux/time_helper.sh &>/dev/null & tmux attach -t \$SLURM_JOB_ID &>/dev/null \
     ;} \
     || eval \"tmux \$_CSC_TMUX_CONF new-session -s \$SLURM_JOB_ID\" \
 ;} \
