@@ -1,5 +1,5 @@
 ---
-name: Interactive shell
+name: Compute node shell
 category: "Tools"
 icon: fa://terminal
 role: batch_connect
