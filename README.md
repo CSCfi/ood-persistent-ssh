@@ -1,7 +1,7 @@
 # OOD Persistent SSH
 Application and ssh wrapper for enabling persistent ssh shells on compute nodes using tmux.
 
-The app requires ood-util and ood-initializers to work.
+The app requires [ood-util](https://github.com/CSCfi/ood-util) and [ood-initializers](https://github.com/CSCfi/ood-initializers) to work.
 
 ## About
 The app creates a file `/tmp/$USER/$SLURM_JOB_ID/persist_ssh` on the node that it launches on and just provides the user a link to the OOD shell app (`/pun/sys/shell/ssh/<node>`).
