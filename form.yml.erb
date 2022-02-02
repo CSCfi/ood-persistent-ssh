@@ -36,9 +36,13 @@ attributes:
       limits:
         interactive:
           cpu: 4
+  csc_slurm_reservation:
+    partitions:
+      - "interactive"
 
 form:
   - csc_extra_desc
+  - csc_slurm_reservation
   - csc_slurm_project
   - csc_slurm_partition
   - csc_header_resources
