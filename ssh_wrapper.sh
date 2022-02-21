@@ -6,7 +6,7 @@ tmux_path=/appl/opt/ood/$ood_instance/soft/tmux/bin/
 
 
 cmd="export TMPDIR=/tmp/\$USER/\$SLURM_JOB_ID ; \
-test -f /run/nvme/job_\$SLURM_JOB_ID/tmp/ && export TMPDIR=/run/nvme/job_\$SLURM_JOB_ID/tmp; \
+test -d /run/nvme/job_\$SLURM_JOB_ID/tmp/ && export TMPDIR=/run/nvme/job_\$SLURM_JOB_ID/tmp; \
 test -f /tmp/\$USER/\$SLURM_JOB_ID/persist_ssh && \
 { export PATH=\"$tmux_path:\$PATH\" ;  \
     { \
