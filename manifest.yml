@@ -4,5 +4,5 @@ category: "Tools"
 icon: fa://terminal
 role: batch_connect
 description: |
-    Interacive shell which persists as long as the job is running.
+    Interactive shell which persists as long as the job is running.
     
