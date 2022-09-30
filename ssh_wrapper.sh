@@ -20,19 +20,25 @@ test -f /tmp/\$USER/\$SLURM_JOB_ID/persist_ssh && \
     || eval \"tmux \$_CSC_TMUX_CONF new-session -s \$SLURM_JOB_ID\" \
 ;} \
 || bash"
-if [[ ! -f $tmux_path/tmux ]];then
-    RED='\033[0;31m'
-    NC='\033[0m'
+if [[ -z "$(echo "$@" | grep 'puhti'  )" ]]; then 
 
-    echo -e "[${RED}INTERNAL ERROR${NC}] tmux binary not found.\n\tNo persistent session created\n\tPlease contact the CSC service desk" >&2
-    if [[ -z "$ood_instance" ]];then
-        echo "SSH wrapper failed, failed to resolve OOD instance CSC_OOD_ENVIRONMENT empty" | logger 
+    /usr/bin/ssh $@ -tt test -f $tmux_path/tmux &>/dev/null 
+
+    if [[ $? -eq 0 ]];then
+        /usr/bin/ssh $@ -tt "$cmd"
     else
-        echo "SSH wrapper failed, executable $tmux_path/tmux does not exist" | logger
+        RED='\033[0;31m'
+        NC='\033[0m'
+
+        echo -e "[${RED}INTERNAL ERROR${NC}] tmux binary not found.\n\tNo persistent session created\n\tPlease contact the CSC service desk" >&2
+        if [[ -z "$ood_instance" ]];then
+            echo "SSH wrapper failed, failed to resolve OOD instance CSC_OOD_ENVIRONMENT empty" | logger 
+        else
+            echo "SSH wrapper failed, executable $tmux_path/tmux does not exist" | logger
+        fi
+        /usr/bin/ssh $@ 
     fi
-    /usr/bin/ssh $@ 
-elif [[ -z "$(echo "$@" | grep 'puhti'  )" ]]; then 
-    /usr/bin/ssh $@ -tt "$cmd"
+    
 else
    /usr/bin/ssh $@ 
 fi
