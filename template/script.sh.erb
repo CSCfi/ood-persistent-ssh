@@ -2,8 +2,9 @@
 
 export t=<%= context.csc_time %>
 
-
-touch /tmp/$USER/$SLURM_JOB_ID/persist_ssh
+export APP_TMP=/dev/shm/$USER/$SLURM_JOB_ID/
+mkdir -p $APP_TMP
+touch $APP_TMP/persist_ssh
 if [[ -z "$( echo $t | grep -- "-" )" ]]; then
     num_sep=$(echo "$t" | awk -F: '{print NF-1}')
     if [[ "$num_sep" -eq "0" ]];then
@@ -22,7 +23,7 @@ fi
 
 
 <%- if context.tmuxconf == "1" -%> 
-    touch /tmp/$USER/$SLURM_JOB_ID/custom_tmux_conf
+    touch $APP_TMP/custom_tmux_conf
 <%- end -%>
 
 
@@ -34,7 +35,7 @@ function warn(){
         /appl/opt/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux display-message  -c /dev/$tmux_tty "WARNING: Less than $1 minutes left for job." 
     fi
 }
-echo "$((  $(date +%s) + $DUR ))" > /tmp/$USER/$SLURM_JOB_ID/shell_job_end_time
+echo "$((  $(date +%s) + $DUR ))" > $APP_TMP/shell_job_end_time
 if [[ $DUR -gt 660  ]];then
     echo "SLEEPING FOR $(($DUR - 660 )) SECONDS, SET TIME WAS $t"
     sleep $(($DUR - 660 ))
