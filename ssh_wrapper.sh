@@ -25,7 +25,9 @@ if [[ -z "$(echo "$@" | grep 'puhti'  )" ]]; then
     /usr/bin/ssh $@ -tt test -f $tmux_path/tmux &>/dev/null 
 
     if [[ $? -eq 0 ]];then
-        /usr/bin/ssh $@ -tt "$cmd"
+        node=$( echo "$@" | grep -o "r[0-9][0-9][a-z][0-9][0-9]")                                                                                                                             
+        srun -D $HOME --gres=gpu:v100:0 --gres=nvme:0  --oversubscribe --jobid=$(squeue --name=sys/dashboard/sys/ood-persistent-ssh -u $USER -w $node -o %i --noheader | head) --pty  bash -c "$cmd"
+
     else
         RED='\033[0;31m'
         NC='\033[0m'
