@@ -4,7 +4,6 @@ attributes:
   csc_cores:
       value: 1
       max: 4
-      cacheable: false
   csc_nvme:
       value: 10
   csc_slurm_partition:
@@ -13,10 +12,8 @@ attributes:
   csc_memory:
       min: 2
       value: 2
-      cacheable: false
   csc_time:
     value: "08:00:00"
-    cacheable: false
   tmuxconf:
     label: "Use custom tmux.conf"
     help: "If not selected, user .tmux.conf will be ignored"
