@@ -36,6 +36,7 @@ Open on Demand persistent ssh
 %__install -m 0755 -D ssh_wrapper.sh %{buildroot}%{deps_path}ssh_wrapper
 %__install -m 0755 -d %{buildroot}%{config_path}apps/shell
 echo 'OOD_SSH_WRAPPER="%{deps_path}ssh_wrapper"' > %{buildroot}%{config_path}apps/shell/env
+echo %{version}-%{release} > %{buildroot}%{_localstatedir}%{app_path}%{name}/VERSION
 
 %post
 # TODO: include form_validated.js globally to avoid this?
