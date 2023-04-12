@@ -1,4 +1,6 @@
 %define app_path /www/ood/apps/sys/
+%define deps_path /var/www/ood/deps/
+%define config_path /etc/ood/config/
 
 Name:           ood-persistent-ssh
 Version:        13
@@ -30,7 +32,10 @@ Open on Demand persistent ssh
 %__install -m 0755 -d %{buildroot}%{_localstatedir}%{app_path}%{name}/template
 %__install -m 0755 -D template/* %{buildroot}%{_localstatedir}%{app_path}%{name}/template
 %__install -m 0644 manifest.yml *.erb README.md LICENSE %{buildroot}%{_localstatedir}%{app_path}%{name}/
-# TODO: Add ssh_wrapper.sh somewhere, add OOD_SSH_WRAPPER to /etc/ood/config/apps/shell/env
+
+%__install -m 0755 -D ssh_wrapper.sh %{buildroot}%{deps_path}ssh_wrapper
+%__install -m 0755 -d %{buildroot}%{config_path}apps/shell
+echo 'OOD_SSH_WRAPPER="%{deps_path}ssh_wrapper"' > %{buildroot}%{config_path}apps/shell/env
 
 %post
 # TODO: include form_validated.js globally to avoid this?
@@ -39,6 +44,8 @@ ln -fns "$(rpm -qil ood-util | grep form_validated.js)" %{_localstatedir}%{app_p
 %files
 
 %{_localstatedir}%{app_path}%{name}
+%{deps_path}
+%{config_path}apps/shell/env
 
 %changelog
 * Thu Feb 23 2023 Sami Ilvonen <sami.ilvonen@csc.fi>
