@@ -1,5 +1,5 @@
 ---
-cluster: "<%= OODClusters.first.id -%>"
+cluster: "<%= ENV["CSC_CLUSTER"] -%>"
 batch_connect:
   template: "basic"
 script:
