@@ -1,7 +1,7 @@
 #!/bin/bash
 # REPO VERSION
 
-ood_instance=$CSC_OOD_ENVIRONMENT
+ood_instance=$SLURM_OOD_ENV
 tmux_path=/appl/opt/ood/$ood_instance/soft/tmux/bin/
 
 export APP_TMP=/dev/shm/$USER/$SLURM_JOB_ID/
@@ -20,7 +20,7 @@ test -f /dev/shm/$USER/\$SLURM_JOB_ID/persist_ssh && \
     || eval \"tmux \$_CSC_TMUX_CONF new-session -s \$SLURM_JOB_ID\" \
 ;} \
 || bash"
-if [[ -z "$(echo "$@" | grep 'puhti'  )" ]]; then 
+if [[ -z "$(echo "$@" | grep '^mahti'  )" ]]; then
 
     /usr/bin/ssh $@ -tt test -f $tmux_path/tmux &>/dev/null 
 
