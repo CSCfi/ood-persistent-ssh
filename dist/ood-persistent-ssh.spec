@@ -38,10 +38,6 @@ Open on Demand persistent ssh
 echo 'OOD_SSH_WRAPPER="%{deps_path}ssh_wrapper"' > %{buildroot}%{config_path}apps/shell/env
 echo %{version}-%{release} > %{buildroot}%{_localstatedir}%{app_path}%{name}/VERSION
 
-%post
-# TODO: include form_validated.js globally to avoid this?
-ln -fns "$(rpm -qil ood-util | grep form_validated.js)" %{_localstatedir}%{app_path}%{name}/form.js
-
 %files
 
 %{_localstatedir}%{app_path}%{name}
