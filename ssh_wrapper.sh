@@ -4,7 +4,7 @@
 ood_instance=$SLURM_OOD_ENV
 tmux_path=/appl/local/ood/$ood_instance/soft/tmux/bin/
 
-export SLURM_JOB_ID="$(squeue --me --nodelist="$@" --noheader --format="%i" | head -n 1)"
+export SLURM_JOB_ID="$(squeue --me --nodelist="$@" --noheader --format="%i" --name='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh' | head -n 1)"
 export APP_TMP=/dev/shm/$USER/$SLURM_JOB_ID/
 
 cmd="export TMPDIR=/tmp/\$USER/\$SLURM_JOB_ID ; \
