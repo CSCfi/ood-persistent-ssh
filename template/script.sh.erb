@@ -31,8 +31,8 @@ function warn(){
     tmux_tty=$(ps -fu $USER | grep tmux | grep  "$SLURM_JOB_ID" | grep -v "grep" | grep pts | awk '{ print $6 }')
     if [[ ! -z "$tmux_tty" ]];then
         echo "WARNING ABOUT END OF JOB IN $1 min"
-        /appl/opt/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux set-option -g display-time 60000
-        /appl/opt/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux display-message  -c /dev/$tmux_tty "WARNING: Less than $1 minutes left for job." 
+        /appl/local/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux set-option -g display-time 60000
+        /appl/local/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux display-message  -c /dev/$tmux_tty "WARNING: Less than $1 minutes left for job."
     fi
 }
 echo "$((  $(date +%s) + $DUR ))" > $APP_TMP/shell_job_end_time
