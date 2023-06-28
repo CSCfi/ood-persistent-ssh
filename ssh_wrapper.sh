@@ -1,6 +1,6 @@
 #!/bin/bash
 # REPO VERSION
-
+set -x
 ood_instance=$SLURM_OOD_ENV
 tmux_path=/appl/local/ood/$ood_instance/soft/tmux/bin/
 
