@@ -1,11 +1,12 @@
+#!/bin/bash
+set -x
 
+# TODO: handle all lustrep
+install_dir="/pfs/lustrep3/appl/local/ood/$1/soft/tmux"
 
-(cd $TMPDIR && wget https://github.com/tmux/tmux/releases/download/3.1c/tmux-3.1c.tar.gz && tar -xvf tmux-3.1c.tar.gz && cd tmux-3.1c  && ./configure --prefix=/appl/opt/ood/$1/soft/tmux && make && make install  )
-rm $TMPDIR/tmux-3.1c.tar.gz
-rm -r $TMPDIR/tmux-3.1c
+mkdir -p "$install_dir/bin"
 
-ln -fns ../../../deps/util/forms/form_validated.js form.js
-cp ssh_wrapper.sh ../../../deps/ssh_wrapper
-cp time_helper.sh /appl/opt/ood/$1/soft/tmux
-chmod +x /appl/opt/ood/$1/soft/tmux/time_helper.sh
-chmod +x ../../../deps/ssh_wrapper
+cp "$(which tmux)" "$install_dir/bin/tmux"
+cp time_helper.sh "$install_dir/time_helper.sh"
+chmod +x "$install_dir/time_helper.sh"
+
