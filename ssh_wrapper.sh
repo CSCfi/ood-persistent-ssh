@@ -27,7 +27,7 @@ if [[ -z "$(echo "$@" | grep '^lumi'  )" ]]; then
     #srun --pty --overlap --nodelist="$@" --jobid="$SLURM_JOB_ID" --chdir "$HOME" test -f $tmux_path/tmux &>/dev/null
 
     #if [[ $? -eq 0 ]];then
-        srun --overlap  --jobid="$SLURM_JOB_ID" --nodelist="$@" --chdir "$HOME" bash -c "$cmd"
+        srun --pty --overlap  --jobid="$SLURM_JOB_ID" --nodelist="$@" --chdir "$HOME" bash -c "$cmd"
     #else
     #    RED='\033[0;31m'
     #    NC='\033[0m'
