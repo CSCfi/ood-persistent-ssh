@@ -1,33 +1,20 @@
 #!/bin/bash
 # REPO VERSION
-set -x
+
+# TODO: Move this somewhere else?
+login_host=lumi.csc.fi
+
 ood_instance=$SLURM_OOD_ENV
 tmux_path=/appl/local/ood/$ood_instance/soft/tmux/bin/
 
-export SLURM_JOB_ID="$(squeue --me --nodelist="$@" --noheader --format="%i" --name='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh' | head -n 1)"
-export APP_TMP=/dev/shm/$USER/$SLURM_JOB_ID/
 
-cmd="export TMPDIR=/tmp/\$USER/\$SLURM_JOB_ID ; \
-test -d /run/nvme/job_\$SLURM_JOB_ID/tmp/ && export TMPDIR=/run/nvme/job_\$SLURM_JOB_ID/tmp; mkdir -p \$TMPDIR ; \
-test -f /dev/shm/$USER/\$SLURM_JOB_ID/persist_ssh && \
-{ export PATH=\"$tmux_path:\$PATH\" ;  \
-    { \
-        test -f /tmp/\$USER/\$SLURM_JOB_ID/custom_tmux_conf && export _CSC_TMUX_CONF=\"\" \
-        ||\
-        export _CSC_TMUX_CONF='-f <(echo -e \"set -g status off\nsetw -g mouse on\"    )'  \
-    ;} ; \
-    { \
-        tmux ls 2>/dev/null && /appl/local/ood/$ood_instance/soft/tmux/time_helper.sh &>/dev/null & tmux attach -t \$SLURM_JOB_ID &>/dev/null \
-    ;} \
-    || eval \"tmux \$_CSC_TMUX_CONF new-session -s \$SLURM_JOB_ID\" \
-;} \
-|| bash"
 if [[ -z "$(echo "$@" | grep '^lumi'  )" ]]; then
+    export SLURM_JOB_ID="$(squeue --me --nodelist="$*" --noheader --format="%i" --name='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh' | head -n 1)"
 
-    srun --pty --overlap --nodelist="$@" --jobid="$SLURM_JOB_ID" --chdir "$HOME" test -f $tmux_path/tmux &>/dev/null
+    /usr/bin/ssh "$login_host" -tt srun --overlap --jobid="$SLURM_JOB_ID" --nodelist="$*" --chdir "$HOME" test -f "$tmux_path/tmux" &>/dev/null
 
     if [[ $? -eq 0 ]];then
-        srun --overlap --pty --jobid="$SLURM_JOB_ID" --nodelist="$@" --chdir "$HOME" bash -c "$cmd"
+        /usr/bin/ssh "$login_host" -tt srun --pty --overlap --jobid="$SLURM_JOB_ID" --nodelist="$*" --chdir "$HOME" "$(dirname "$tmux_path")/start_tmux.sh"
     else
         RED='\033[0;31m'
         NC='\033[0m'
@@ -38,7 +25,7 @@ if [[ -z "$(echo "$@" | grep '^lumi'  )" ]]; then
         else
             echo "SSH wrapper failed, executable $tmux_path/tmux does not exist" | logger
         fi
-        srun --overlap --pty --jobid="$SLURM_JOB_ID" --nodelist="$@" --chdir "$HOME" $SHELL
+        /usr/bin/ssh "$login_host" -tt srun --pty --overlap --jobid="$SLURM_JOB_ID" --nodelist="$*" --chdir "$HOME" "$SHELL"
     fi
 else
    /usr/bin/ssh $@
