@@ -2,13 +2,13 @@
 # REPO VERSION
 
 # TODO: Move this somewhere else?
-login_host=lumi.csc.fi
+login_host=193.167.209.175
 
 ood_instance=$SLURM_OOD_ENV
 tmux_path=/appl/local/ood/$ood_instance/soft/tmux/bin/
 
 
-if [[ -z "$(echo "$@" | grep '^lumi'  )" ]]; then
+if [[ -z "$(echo "$@" | grep '^lumi\|^193\|^uan'  )" ]]; then
     export SLURM_JOB_ID="$(squeue --me --nodelist="$*" --noheader --format="%i" --name='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh' | head -n 1)"
 
     /usr/bin/ssh "$login_host" -tt srun --overlap --jobid="$SLURM_JOB_ID" --nodelist="$*" --chdir "$HOME" test -f "$tmux_path/tmux" &>/dev/null
