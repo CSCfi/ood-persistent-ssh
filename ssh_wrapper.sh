@@ -2,7 +2,7 @@
 # REPO VERSION
 
 # TODO: Move this somewhere else?
-login_host=193.167.209.175
+login_host=$(yq read /etc/ood/config/clusters.d/lumi.yaml 'v2.login.host')
 
 ood_instance=$SLURM_OOD_ENV
 tmux_path=/appl/local/ood/$ood_instance/soft/tmux/bin/
