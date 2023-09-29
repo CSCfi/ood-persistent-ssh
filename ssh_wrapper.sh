@@ -6,7 +6,7 @@ login_host=$(yq read /etc/ood/config/clusters.d/lumi.yaml 'v2.login.host')
 
 ood_instance=$SLURM_OOD_ENV
 tmux_path=/appl/local/ood/$ood_instance/soft/tmux/bin/
-
+export TERM=xterm-256color
 
 if [[ -z "$(echo "$@" | grep '^lumi\|^193\|^uan'  )" ]]; then
     export SLURM_JOB_ID="$(squeue --me --nodelist="$*" --noheader --format="%i" --name='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh' | head -n 1)"
