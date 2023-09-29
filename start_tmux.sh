@@ -6,6 +6,10 @@ export TMPDIR=/tmp/$USER/SLURM_JOB_ID
 
 test -d "/run/nvme/job_$SLURM_JOB_ID/tmp/" && export TMPDIR=/run/nvme/job_$SLURM_JOB_ID/tmp
 mkdir -p "$TMPDIR"
+mkdir -p $TMPDIR/tmux
+chmod og-rwx -R $TMPDIR/tmux
+export TMUX_TMPDIR=$TMPDIR/tmux
+
 
 test -f "/dev/shm/$USER/$SLURM_JOB_ID/persist_ssh" && \
 {
