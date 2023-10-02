@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-export TMPDIR=/tmp/$USER/SLURM_JOB_ID
+export TMPDIR=/tmp/$USER/$SLURM_JOB_ID
 
 test -d "/run/nvme/job_$SLURM_JOB_ID/tmp/" && export TMPDIR=/run/nvme/job_$SLURM_JOB_ID/tmp
 mkdir -p "$TMPDIR"
