@@ -32,7 +32,11 @@ if [[ -z "$(echo "$@" | grep '^lumi\|^193\|^uan'  )" ]]; then
     else
       # SSH to compute node (non-persistent)
       export SLURM_JOB_ID="$(squeue --me --nodelist="$1" --noheader --format="%i" | head -n 1)"
-      /usr/bin/ssh "$login_host" -tt srun --pty --overlap --jobid="$SLURM_JOB_ID" --nodelist="$1" --chdir "$HOME" "$SHELL"
+      if [[ -n "$SLURM_JOB_ID" ]];then
+        /usr/bin/ssh "$login_host" -tt srun --pty --overlap --jobid="$SLURM_JOB_ID" --nodelist="$1" --chdir "$HOME" "$SHELL"
+      else
+        echo "No job found on node $1"
+      fi
     fi
 else
     # SSH to login node
