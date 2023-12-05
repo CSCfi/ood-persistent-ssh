@@ -11,7 +11,7 @@ script:
       - '-c'
       - '<%= csc_cores  %>'
       - '-t'
-      - '<%= csc_time %>'
+      - '<%= SlurmReservation.max_time(csc_slurm_reservation, csc_time) %>'
       <% if max_mem_per_cpu > 0 %>
       - '--mem=<%= mem -%>M'
       <% else %>
