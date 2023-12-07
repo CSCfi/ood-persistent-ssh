@@ -6,7 +6,8 @@ attributes:
       max: 4
   csc_slurm_partition:
     value: "interactive"
-    fixed: true
+    select:
+      - "interactive"
   csc_memory:
       min: 2
       value: 2
@@ -25,9 +26,6 @@ attributes:
       it's explicitly closed by the user, e.g running `exit` or pressing `Ctrl+D`.
   csc_reset_cache:
     app: "sys/ood-persistent-ssh"
-  csc_slurm_limits:
-    data:
-      partition: "interactive"
 
 form:
   - csc_extra_desc
