@@ -10,7 +10,7 @@ test -d /run/nvme/job_\$SLURM_JOB_ID/tmp/ && export TMPDIR=/run/nvme/job_\$SLURM
 test -f /dev/shm/$USER/\$SLURM_JOB_ID/persist_ssh && \
 { export PATH=\"$tmux_path:\$PATH\" ;  \
     { \
-        test -f /tmp/\$USER/\$SLURM_JOB_ID/custom_tmux_conf && export _CSC_TMUX_CONF=\"\" \
+        test -f /dev/shm/\$USER/\$SLURM_JOB_ID/custom_tmux_conf && export _CSC_TMUX_CONF=\"\" \
         ||\
         export _CSC_TMUX_CONF='-f <(echo -e \"set -g status off\nsetw -g mouse on\"    )'  \
     ;} ; \
