@@ -1,6 +1,8 @@
 ---
 cluster: "<%= ENV["CSC_CLUSTER"] -%>"
 
+<% csc_slurm_partition = SlurmReservation.partition_to_use(csc_slurm_reservation, csc_slurm_partition) %>
+
 <% max_mem_per_cpu = SlurmLimits.limits.fetch(csc_slurm_partition, {}).fetch(:max_mem_per_cpu, 0).to_f %>
 <% mem = (max_mem_per_cpu * 1024 * csc_cores.to_i).to_i %>
 
@@ -26,4 +28,4 @@ script:
       <% unless gres.empty? %>
       - '--gres=<%= gres.join(",") -%>'
       <% end %>
-      - '--partition=<%= SlurmReservation.partition_to_use(csc_slurm_reservation, csc_slurm_partition) %>'
+      - '--partition=<%= csc_slurm_partition %>'
