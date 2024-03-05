@@ -4,6 +4,12 @@ cluster: "<%= ENV["CSC_CLUSTER"] -%>"
 <% max_mem_per_cpu = SlurmLimits.limits.fetch(csc_slurm_partition, {}).fetch(:max_mem_per_cpu, 0).to_f %>
 <% mem = (max_mem_per_cpu * 1024 * csc_cores.to_i).to_i %>
 
+<% n_gpus = csc_slurm_partition.include?("gpu") ? 1 : 0 %>
+<% gpu_type = SlurmLimits.limits&.fetch(csc_slurm_partition, nil)&.fetch(:gpu_types)&.first %>
+<% gres = [] %>
+<% gres.push("nvme:#{csc_nvme}") if csc_nvme.to_i > 0 %>
+<% gres.push("gpu:#{gpu_type}:#{n_gpus}") if gpu_type && n_gpus > 0 %>
+
 batch_connect:
   template: "basic"
 script:
@@ -17,7 +23,7 @@ script:
       <% else %>
       - '--mem=<%= csc_memory -%>G'
       <% end %>
-      <% if csc_nvme.to_i > 0 %>
-      - '--gres=nvme:<%= csc_nvme -%>'
+      <% unless gres.empty? %>
+      - '--gres=<%= gres.join(",") -%>'
       <% end %>
       - '--partition=<%= SlurmReservation.partition_to_use(csc_slurm_reservation, csc_slurm_partition) %>'
