@@ -21,12 +21,18 @@ tmux_path=/appl/local/ood/$ood_instance/soft/tmux/bin/
 export TERM=xterm-256color
 
 if [[ -z "$(echo "$1" | grep '^lumi\|^193\|^uan'  )" ]]; then
-    export SLURM_JOB_ID="$(squeue --me --nodelist="$1" --noheader --format="%i" --name='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh' | head -n 1)"
+
+    # Job id specified in URL.
+    job_id=$(echo "$3" | sed "s#^cd '/\\([[:digit:]]\\+\\).*\$#\\1#; t; q1")
+    if [ $? -eq 0 ]; then
+      export SLURM_JOB_ID="$job_id"
+    else
+      export SLURM_JOB_ID="$(squeue --me --nodelist="$1" --noheader --format="%i" --name='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh' | head -n 1)"
+    fi
 
     if [[ -n "$SLURM_JOB_ID" ]];then
       # SSH to compute node (persistent)
       /usr/bin/ssh "$login_host" -tt srun --overlap --jobid="$SLURM_JOB_ID" --nodelist="$1" test -f "$tmux_path/tmux" &>/dev/null
-
       if [[ $? -eq 0 ]];then
           /usr/bin/ssh "$login_host" -tt "cd $HOME; srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$1' '$(dirname "$tmux_path")/start_tmux.sh'"
       else
