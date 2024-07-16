@@ -2,7 +2,7 @@
 
 export t=<%= context.csc_time %>
 
-export APP_TMP=/dev/shm/$USER/$SLURM_JOB_ID/
+export APP_TMP=/tmp/$USER/$SLURM_JOB_ID/
 mkdir -p $APP_TMP
 touch $APP_TMP/persist_ssh
 if [[ -z "$( echo $t | grep -- "-" )" ]]; then

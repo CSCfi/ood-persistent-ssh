@@ -14,6 +14,8 @@ cluster: "<%= ENV["CSC_CLUSTER"] -%>"
 
 batch_connect:
   template: "basic"
+  conn_params:
+    - job_id
 script:
   native:
       - '-c'
