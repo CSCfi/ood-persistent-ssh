@@ -20,7 +20,7 @@ function check_tty(){
 }
 
 # epoch
-export APP_TMP=/dev/shm/$USER/$SLURM_JOB_ID/
+export APP_TMP=/tmp/$USER/$SLURM_JOB_ID/
 end_time=$(cat $APP_TMP/shell_job_end_time) 
 current_time=$(date +%s)
 
