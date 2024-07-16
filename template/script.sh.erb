@@ -5,7 +5,7 @@ export t=<%= context.csc_time %>
 export TMPDIR=/tmp/$USER/$SLURM_JOB_ID
 export TMUX_TMPDIR=$TMPDIR/tmux
 
-export APP_TMP=/dev/shm/$USER/$SLURM_JOB_ID/
+export APP_TMP="$TMPDIR"
 mkdir -p $APP_TMP
 touch $APP_TMP/persist_ssh
 if [[ -z "$( echo $t | grep -- "-" )" ]]; then

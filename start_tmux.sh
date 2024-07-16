@@ -11,10 +11,10 @@ chmod og-rwx -R $TMPDIR/tmux
 export TMUX_TMPDIR=$TMPDIR/tmux
 
 
-test -f "/dev/shm/$USER/$SLURM_JOB_ID/persist_ssh" && \
+test -f "/tmp/$USER/$SLURM_JOB_ID/persist_ssh" && \
 {
   export PATH="$SCRIPT_DIR/bin:$PATH"
-  test -f "/dev/shm/$USER/$SLURM_JOB_ID/custom_tmux_conf" && export _CSC_TMUX_CONF="" \
+  test -f "/tmp/$USER/$SLURM_JOB_ID/custom_tmux_conf" && export _CSC_TMUX_CONF="" \
   || export _CSC_TMUX_CONF="-f <(echo -e \"set -g status off\nsetw -g mouse on\nset -g set-titles on\nset -g set-titles-string 'Compute node shell (#h)'\")"
   {
       tmux ls 2>/dev/null && "$SCRIPT_DIR/time_helper.sh" &>/dev/null & tmux attach -t "$SLURM_JOB_ID" &>/dev/null
