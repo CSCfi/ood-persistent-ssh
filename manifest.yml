@@ -5,4 +5,5 @@ icon: fa://terminal
 role: batch_connect
 description: |
     Interactive shell which persists as long as the job is running.
-    
+metadata:
+  profiles: "all,default,industry"
