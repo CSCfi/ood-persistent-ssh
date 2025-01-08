@@ -23,13 +23,20 @@ ssh_login_host() {
   /usr/bin/ssh -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no "$@"
 }
 
-retry_once() {
-  "$@"
-  if [[ $? -eq 255 ]]; then
-    echo "SSH failed, trying again"
-    sleep 0.1
+retry() {
+  # Attempt up to 5 times
+  for i in {1..5}; do
     "$@"
-  fi
+    last_exit="$?"
+    if [[ "$last_exit" -eq 255 ]]; then
+      echo "SSH failed, trying again"
+      sleep 0.5
+    else
+      break
+    fi
+  done
+  # Preserve exit code of executed command
+  (exit "$last_exit")
 }
 
 if [ "$#" -eq 1 ]; then
@@ -58,9 +65,9 @@ if [[ -z "$(echo "$node" | grep '^lumi\|^193\|^uan' )" ]]; then
 
     if [[ -n "$SLURM_JOB_ID" ]];then
       # SSH to compute node (persistent)
-      retry_once test_tmux
+      retry test_tmux
       if [[ $? -eq 0 ]];then
-        retry_once start_tmux_session
+        retry start_tmux_session
       else
           RED='\033[0;31m'
           NC='\033[0m'
@@ -71,18 +78,18 @@ if [[ -z "$(echo "$node" | grep '^lumi\|^193\|^uan' )" ]]; then
           else
               echo "SSH wrapper failed, executable $tmux_path/tmux does not exist" | logger
           fi
-          retry_once ssh_node_nonpersistent
+          retry ssh_node_nonpersistent
       fi
     else
       # SSH to compute node (non-persistent)
       export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i" | head -n 1)"
       if [[ -n "$SLURM_JOB_ID" ]];then
-        retry_once ssh_node_nonpersistent
+        retry ssh_node_nonpersistent
       else
         echo "No job found on node $node"
       fi
     fi
 else
     # SSH to login node
-    retry_once ssh_login_host "$@"
+    retry ssh_login_host "$@"
 fi
