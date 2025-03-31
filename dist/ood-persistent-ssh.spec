@@ -3,8 +3,8 @@
 %define config_path /etc/ood/config/
 
 Name:           ood-persistent-ssh
-Version:        3
-Release:        2%{?dist}
+Version:        4
+Release:        1%{?dist}
 Summary:        Open on Demand persistent ssh
 
 BuildArch:      noarch
