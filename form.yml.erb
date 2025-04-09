@@ -1,4 +1,10 @@
 ---
+form_header: |
+  <a href="https://docs.lumi-supercomputer.eu/runjobs/webui/#shell" target="_blank">Documentation</a>
+
+  The shell / ssh session will stay open and any programs started there will stay running
+  even if internet connection is lost or the browser tab is closed. The session will end if
+  it's explicitly closed by the user, e.g running `exit` or pressing `Ctrl+D`.
 cacheable: false
 attributes:
   csc_cores:
@@ -17,18 +23,10 @@ attributes:
     label: "Use custom tmux.conf"
     help: "If not selected, user .tmux.conf will be ignored"
     widget: "check_box"
-  csc_extra_desc:
-    desc: |
-      <a href="https://docs.lumi-supercomputer.eu/runjobs/webui/#shell" target="_blank">Documentation</a>
-
-      The shell / ssh session will stay open and any programs started there will stay running
-      even if internet connection is lost or the browser tab is closed. The session will end if
-      it's explicitly closed by the user, e.g running `exit` or pressing `Ctrl+D`.
   csc_reset_cache:
     app: "sys/ood-persistent-ssh"
 
 form:
-  - csc_extra_desc
   - csc_slurm_reservation
   - csc_slurm_project
   - csc_slurm_partition
