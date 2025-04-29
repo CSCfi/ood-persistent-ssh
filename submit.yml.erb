@@ -12,6 +12,8 @@ cluster: "<%= ENV["CSC_CLUSTER"] -%>"
 <% gres.push("nvme:#{csc_nvme}") if csc_nvme.to_i > 0 %>
 <% gres.push("gpu:#{gpu_type}:#{n_gpus}") if gpu_type && n_gpus > 0 %>
 
+<% CSCConfiguration.validate_job_length(csc_time) %>
+
 batch_connect:
   template: "basic"
   conn_params:
