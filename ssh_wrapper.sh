@@ -24,9 +24,9 @@ if [[ -z "$(echo "$1" | grep '^mahti'  )" ]]; then
     fi
 
     if [[ -n "$SLURM_JOB_ID" ]]; then
-      /usr/bin/ssh "$login_host" -tt srun --overlap --jobid="$SLURM_JOB_ID" --nodelist="$node" test -f "$tmux_path/tmux" &>/dev/null
+      /usr/bin/ssh "$login_host" -F none -tt srun --overlap --jobid="$SLURM_JOB_ID" --nodelist="$node" test -f "$tmux_path/tmux" &>/dev/null
       if [[ $? -eq 0 ]];then
-        /usr/bin/ssh "$login_host" -tt "srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$(dirname "$tmux_path")/start_tmux.sh'"
+        /usr/bin/ssh "$login_host" -F none -tt "srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$(dirname "$tmux_path")/start_tmux.sh'"
       else
           RED='\033[0;31m'
           NC='\033[0m'
@@ -37,18 +37,18 @@ if [[ -z "$(echo "$1" | grep '^mahti'  )" ]]; then
           else
               echo "SSH wrapper failed, executable $tmux_path/tmux does not exist" | logger
           fi
-          /usr/bin/ssh "$login_host" -tt "env -u PPROMPT_COMMAND srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
+          /usr/bin/ssh "$login_host" -F none -tt "env -u PPROMPT_COMMAND srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
       fi
     else
       # SSH to compute node (non-persistent)
       export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i" | head -n 1)"
       if [[ -n "$SLURM_JOB_ID" ]];then
-        /usr/bin/ssh "$login_host" -tt "env -u PROMPT_COMMAND srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
+        /usr/bin/ssh "$login_host" -F none -tt "env -u PROMPT_COMMAND srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
       else
         echo "No job found on node $1"
       fi
     fi
 
 else
-   /usr/bin/ssh $@
+   /usr/bin/ssh -F none $@
 fi
