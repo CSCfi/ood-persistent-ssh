@@ -8,19 +8,19 @@ login_host=$(yq read /etc/ood/config/clusters.d/lumi.yaml 'v2.login.host')
 PS1FIX='"\\[\$(ppwd)\\]\\u@\\h:\\w> "'
 
 test_tmux() {
-  /usr/bin/ssh -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no -tt "$login_host" srun --overlap --jobid="$SLURM_JOB_ID" --nodelist="$node" test -f "$tmux_path/tmux" &>/dev/null
+  /usr/bin/ssh -F /etc/ssh/ssh_config -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no -tt "$login_host" srun --overlap --jobid="$SLURM_JOB_ID" --nodelist="$node" test -f "$tmux_path/tmux" &>/dev/null
 }
 
 start_tmux_session() {
-  /usr/bin/ssh -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no -tt "$login_host" "cd $HOME; srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$(dirname "$tmux_path")/start_tmux.sh'"
+  /usr/bin/ssh -F /etc/ssh/ssh_config -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no -tt "$login_host" "cd $HOME; srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$(dirname "$tmux_path")/start_tmux.sh'"
 }
 
 ssh_node_nonpersistent() {
-  /usr/bin/ssh -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no -tt "$login_host" "cd $HOME; env PS1=$PS1FIX srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
+  /usr/bin/ssh -F /etc/ssh/ssh_config -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no -tt "$login_host" "cd $HOME; env PS1=$PS1FIX srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
 }
 
 ssh_login_host() {
-  /usr/bin/ssh -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no "$@"
+  /usr/bin/ssh -F /etc/ssh/ssh_config -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no "$@"
 }
 
 retry() {
