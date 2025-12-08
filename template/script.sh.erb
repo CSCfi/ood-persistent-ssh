@@ -24,11 +24,24 @@ else
     DUR=$(($days*24*3600  + $d_o))
 fi
 
+function run_tmux(){
+  export TMPDIR=/tmp/$USER/$SLURM_JOB_ID
+  test -d "/run/nvme/job_$SLURM_JOB_ID/tmp/" && export TMPDIR=/run/nvme/job_$SLURM_JOB_ID/tmp
+  export TMUX_TMPDIR="$TMPDIR/tmux"
+  mkdir -p "$TMUX_TMPDIR"
+  chmod og-rwx -R $TMUX_TMPDIR
+  export _CSC_TMUX_CONF="-f <(echo -e \"set -g status off\nsetw -g mouse on\nset -g exit-empty off\nset -g exit-unattached off\nset -g set-titles on\nset -g set-titles-string 'Compute node shell (#h)'\")"
+  <% if context.tmuxconf == "1" %>
+  export _CSC_TMUX_CONF=""
+  <% end %>
 
-<%- if context.tmuxconf == "1" -%> 
-    touch $APP_TMP/custom_tmux_conf
-<%- end -%>
+  while ! eval "/appl/local/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux $_CSC_TMUX_CONF -D" ; do
+    echo "tmux exited with exit code $?, restarting"
+    sleep 5
+  done
+}
 
+run_tmux &
 
 function warn(){
     tmux_tty=$(ps -fu $USER | grep tmux | grep  "$SLURM_JOB_ID" | grep -v "grep" | grep pts | awk '{ print $6 }')
