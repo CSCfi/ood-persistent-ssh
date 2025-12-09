@@ -32,7 +32,8 @@ function run_tmux(){
   chmod og-rwx -R $TMUX_TMPDIR
   export _CSC_TMUX_CONF="-f <(echo -e \"set -g status off\nsetw -g mouse on\nset -g exit-empty off\nset -g exit-unattached off\nset -g set-titles on\nset -g set-titles-string 'Compute node shell (#h)'\")"
   <% if context.tmuxconf == "1" %>
-  export _CSC_TMUX_CONF=""
+    export _CSC_TMUX_CONF=""
+    touch "$APP_TMP/custom_tmux_conf"
   <% end %>
 
   while ! eval "/appl/local/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux $_CSC_TMUX_CONF -D" ; do
