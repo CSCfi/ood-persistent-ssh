@@ -10,7 +10,7 @@ chmod og-rwx -R "$TMUX_TMPDIR"
 
 test -f "$TMPDIR/custom_tmux_conf" && export _CSC_TMUX_CONF="" || export _CSC_TMUX_CONF="-f <(echo -e \"set -g status off\nsetw -g mouse on\nset -g exit-empty off\nset -g exit-unattached off\nset -g set-titles on\nset -g set-titles-string 'Compute node shell (#h)'\")"
 
-export PATH="/appl/opt/ood/test/soft/tmux/bin:$PATH"
+export PATH="$SCRIPT_DIR/bin:$PATH"
 {
     tmux has-session -t "$SLURM_JOB_ID" 2>/dev/null && "$SCRIPT_DIR/time_helper.sh" &>/dev/null & tmux attach -t "$SLURM_JOB_ID" &>/dev/null
 } \
