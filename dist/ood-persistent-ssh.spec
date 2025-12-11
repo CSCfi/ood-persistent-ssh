@@ -3,7 +3,7 @@
 %define config_path /etc/ood/config/
 
 Name:           ood-persistent-ssh
-Version:        10
+Version:        11
 Release:        1%{?dist}
 Summary:        Open on Demand persistent ssh
 
