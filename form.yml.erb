@@ -13,15 +13,17 @@ attributes:
   csc_slurm_partition:
     value: "interactive"
     select:
+      - "test"
       - "interactive"
       - "small"
-      - "gpusmall"
+      - "gputest"
+      - "gpuinteractive"
   csc_memory:
       min: 2
       value: 2
   csc_time:
     value: "08:00:00"
-    max-gpusmall: "8:00:00"
+    max-gpuinteractive: "08:00:00"
   tmuxconf:
     label: "Use custom tmux.conf"
     help: "If not selected, user .tmux.conf will be ignored"
