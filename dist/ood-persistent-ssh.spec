@@ -1,9 +1,9 @@
 %define app_path /www/ood/apps/sys/
-%define deps_path /var/www/ood/deps/
+%define deps_path /opt/csc/bin/
 %define config_path /etc/ood/config/
 
 Name:           ood-persistent-ssh
-Version:        11
+Version:        1
 Release:        1%{?dist}
 Summary:        Open on Demand persistent ssh
 
@@ -14,7 +14,6 @@ Source:         %{name}-%{version}.tar.bz2
 
 Requires:       ondemand
 Requires:       ood-util
-Requires:       ood-initializers
 
 # Disable debuginfo
 %global debug_package %{nil}
@@ -35,7 +34,7 @@ Open on Demand persistent ssh
 
 %__install -m 0755 -D ssh_wrapper.sh %{buildroot}%{deps_path}ssh_wrapper
 %__install -m 0755 -d %{buildroot}%{config_path}apps/shell
-echo -e 'OOD_SSH_WRAPPER="%{deps_path}ssh_wrapper"\nOOD_DASHBOARD_TITLE="Mahti.csc.fi"' > %{buildroot}%{config_path}apps/shell/env
+echo -e 'OOD_SSH_WRAPPER="%{deps_path}ssh_wrapper"\nOOD_DASHBOARD_TITLE="Roihu.csc.fi"' > %{buildroot}%{config_path}apps/shell/env
 echo %{version}-%{release} > %{buildroot}%{_localstatedir}%{app_path}%{name}/VERSION
 
 %files
