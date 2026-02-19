@@ -2,7 +2,7 @@
 # REPO VERSION
 
 # TODO: read this from cluster config
-login_host="mahti-login.csc.fi"
+login_host="roihu-cpu.csc.fi"
 
 if [ "$#" -gt 1 ]; then
   # SSH to login node, directory specified. Adds env -u PROMPT_COMMAND to fix shell app title.
