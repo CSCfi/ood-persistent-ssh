@@ -2,6 +2,8 @@
 
 export t=<%= context.csc_time %>
 
+TMUX_VERSION=3.6b
+
 export APP_TMP=/tmp/$USER/$SLURM_JOB_ID/
 mkdir -p $APP_TMP
 touch $APP_TMP/persist_ssh
@@ -13,7 +15,7 @@ if [[ -z "$( echo $t | grep -- "-" )" ]]; then
         DUR=$( echo "$t" | awk -F: '{ print ($1 * 60) + $2 }')
     elif [[ "$num_sep" -eq "2" ]];then
         DUR=$( echo "$t" | awk -F: '{ print ($1 * 3600) + ($2 * 60) + $3 }')
-    fi    
+    fi
 else
     days=$(echo "$t" | cut -d "-" -f1)
     other=$(echo "$t" | cut -d "-" -f2)
@@ -23,7 +25,6 @@ fi
 
 function run_tmux(){
   export TMPDIR=/tmp/$USER/$SLURM_JOB_ID
-  test -d "/run/nvme/job_$SLURM_JOB_ID/tmp/" && export TMPDIR=/run/nvme/job_$SLURM_JOB_ID/tmp
   export TMUX_TMPDIR="$TMPDIR/tmux"
   mkdir -p "$TMUX_TMPDIR"
   chmod og-rwx -R $TMUX_TMPDIR
@@ -33,7 +34,7 @@ function run_tmux(){
     touch "$APP_TMP/custom_tmux_conf"
   <% end %>
 
-  while ! eval "/appl/opt/ood/$SLURM_OOD_ENV/soft/tmux/bin/tmux $_CSC_TMUX_CONF -D" ; do
+  while ! eval "/appl/soft/manual/ood/$SLURM_OOD_ENV/$(uname -m)/soft/tmux/$TMUX_VERSION/bin/tmux $_CSC_TMUX_CONF -D -u" ; do
     echo "tmux exited with exit code $?, restarting"
     sleep 5
   done
@@ -44,9 +45,9 @@ run_tmux &
 function warn(){
     tmux_tty=$(ps -fu $USER | grep tmux | grep  "$SLURM_JOB_ID" | grep -v "grep" | grep pts | awk '{ print $6 }')
     if [[ ! -z "$tmux_tty" ]];then
-        echo "WARNING ABOUT END OF JOB IN $1 min"
-        /appl/opt/ood/$SLURM_OOD_ENV/soft/$(uname -m)/tmux/bin/tmux set-option -g display-time 60000
-        /appl/opt/ood/$SLURM_OOD_ENV/soft/$(uname -m)/tmux/bin/tmux display-message  -c /dev/$tmux_tty "WARNING: Less than $1 minutes left for job."
+      echo "WARNING ABOUT END OF JOB IN $1 min"
+        /appl/soft/manual/ood/$SLURM_OOD_ENV/$(uname -m)/soft/tmux/$TMUX_VERSION/bin/tmux set-option -g display-time 60000
+        /appl/soft/manual/ood/$SLURM_OOD_ENV/$(uname -m)/soft/tmux/$TMUX_VERSION/bin/tmux display-message  -c /dev/$tmux_tty "WARNING: Less than $1 minutes left for job."
     fi
 }
 echo "$((  $(date +%s) + $DUR ))" > $APP_TMP/shell_job_end_time

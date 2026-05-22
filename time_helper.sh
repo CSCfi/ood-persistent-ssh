@@ -2,7 +2,7 @@
 
 function check_tty(){
     tmux_tty="$(ps -fu $USER | grep tmux | grep  "$SLURM_JOB_ID" | grep -v "grep" | grep pts | awk '{ print $6 }')"
-    if [[ ! -z "$tmux_tty" ]];then                                                                               
+    if [[ ! -z "$tmux_tty" ]];then
         tmux set-option -g display-time 600000
         secs="$(( $end_time - $current_time))"
         d=$(( secs / 86400 ))
@@ -33,3 +33,4 @@ sleep 4
 check_tty && exit 0
 sleep 8
 check_tty && exit 0
+
