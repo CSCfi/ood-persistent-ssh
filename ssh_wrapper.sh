@@ -43,7 +43,7 @@ if [[ -z "$(echo "$1" | grep '^mahti'  )" ]]; then
       # SSH to compute node (non-persistent)
       export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i" | head -n 1)"
       if [[ -n "$SLURM_JOB_ID" ]];then
-        /usr/bin/ssh "$login_host" -F /etc/ssh/ssh_config -tt "env -u PROMPT_COMMAND srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
+        /usr/bin/ssh "$login_host" -F /etc/ssh/ssh_config -tt "env -u PROMPT_COMMAND srun --pty --overlap --cpu-bind=none --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
       else
         echo "No job found on node $1"
       fi
