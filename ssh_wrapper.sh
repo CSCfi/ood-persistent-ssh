@@ -16,7 +16,7 @@ start_tmux_session() {
 }
 
 ssh_node_nonpersistent() {
-  /usr/bin/ssh -F /etc/ssh/ssh_config -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no -tt "$login_host" "cd $HOME; env PS1=$PS1FIX srun --pty --overlap --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
+  /usr/bin/ssh -F /etc/ssh/ssh_config -oPasswordAuthentication=no -oKbdInteractiveAuthentication=no -oChallengeResponseAuthentication=no -tt "$login_host" "cd $HOME; env PS1=$PS1FIX srun --pty --overlap --cpu-bind=none --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
 }
 
 ssh_login_host() {
