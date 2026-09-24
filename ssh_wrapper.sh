@@ -26,9 +26,9 @@ if [[ -z "$(echo "$1" | grep '^roihu'  )" ]]; then
     fi
 
     if [[ -n "$SLURM_JOB_ID" ]]; then
-      /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt srun --argos=no --overlap --export=HOME,TERM --jobid="$SLURM_JOB_ID" --nodelist="$node" /bin/test -f "$tmux_path/tmux" &>/dev/null
+      /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt srun --overlap --export=HOME,TERM --jobid="$SLURM_JOB_ID" --nodelist="$node" /bin/test -f "$tmux_path/tmux" &>/dev/null
       if [[ $? -eq 0 ]]; then
-        /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "srun --argos=no --pty --overlap --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' /appl/soft/manual/ood/$SLURM_OOD_ENV/common/soft/scripts/start_tmux.sh"
+        /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "srun --pty --overlap --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' /appl/soft/manual/ood/$SLURM_OOD_ENV/common/soft/scripts/start_tmux.sh"
       else
           RED='\033[0;31m'
           NC='\033[0m'
@@ -39,13 +39,13 @@ if [[ -z "$(echo "$1" | grep '^roihu'  )" ]]; then
           else
               echo "SSH wrapper failed, executable $tmux_path/tmux does not exist" | logger
           fi
-          /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "env -u PPROMPT_COMMAND srun --argos=no --pty --overlap --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
+          /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "env -u PPROMPT_COMMAND srun --pty --overlap --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
       fi
     else
       # SSH to compute node (non-persistent)
       export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i" | head -n 1)"
       if [[ -n "$SLURM_JOB_ID" ]];then
-        /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "env -u PROMPT_COMMAND srun --argos=no --pty --overlap --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL' -il"
+        /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "env -u PROMPT_COMMAND srun --pty --overlap --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL' -il"
       else
         echo "No job found on node $1"
       fi
