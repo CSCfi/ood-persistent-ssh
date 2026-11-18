@@ -13,6 +13,7 @@ cluster: "<%= ENV["CSC_CLUSTER"] -%>"
 <% gres.push("gpu:#{gpu_type}:#{n_gpus}") if gpu_type && n_gpus > 0 %>
 
 <% CscConfiguration.validate_job_length(csc_time) %>
+<% CscConfiguration.validate_sbf_size(csc_sbf) %>
 
 batch_connect:
   template: "basic"
@@ -31,6 +32,9 @@ script:
       <% end %>
       <% unless gres.empty? %>
       - '--gres=<%= gres.join(",") -%>'
+      <% end %>
+      <% if csc_sbf.to_i > 0 %>
+      - '--bb=#BB_LUA SBF storagesize=<%= csc_sbf.to_i -%>G path=/sbf/data'
       <% end %>
       - '--partition=<%= part %>'
       - '--propagate=NONE'
