@@ -17,13 +17,11 @@ tmux_path="/appl/soft/manual/ood/$SLURM_OOD_ENV/\$(uname -m)/soft/tmux/$TMUX_VER
 if [[ -z "$(echo "$1" | grep '^roihu'  )" ]]; then
 
     node="$(echo "$1" | cut -d'.' -f1)"
+    persistent_names='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh'
     # Job id specified in URL.
-    job_id=$(echo "$3" | sed "s#^cd '/\\([[:digit:]]\\+\\).*\$#\\1#; t; q1")
-    if [ $? -eq 0 ]; then
-      export SLURM_JOB_ID="$job_id"
-    else
-      export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i" --name='sys/dashboard/sys/ood-persistent-ssh,sys/dashboard/dev/ood-persistent-ssh' | head -n 1)"
-    fi
+    job_id=$(echo "$3" | sed "s#^cd '/\\([[:digit:]]\\+\\).*\$#\\1#; t; q1") || job_id=""
+    # Only use tmux for persistent SSH jobs, limited to the job in the URL if one is given.
+    export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i" --name="$persistent_names" ${job_id:+--jobs="$job_id"} 2>/dev/null | head -n 1)"
 
     if [[ -n "$SLURM_JOB_ID" ]]; then
       /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt srun --overlap --resv-ports=0 --export=HOME,TERM --jobid="$SLURM_JOB_ID" --nodelist="$node" /bin/test -f "$tmux_path/tmux" &>/dev/null
@@ -42,8 +40,8 @@ if [[ -z "$(echo "$1" | grep '^roihu'  )" ]]; then
           /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "env -u PPROMPT_COMMAND srun --pty --overlap --resv-ports=0 --cpu-bind=none --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
       fi
     else
-      # SSH to compute node (non-persistent), only use OOD jobs (sys/dashboard/...)
-      export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i %j" | grep '^[^ ]* sys/dashboard/' | head -n 1 | cut -d' ' -f1)"
+      # SSH to compute node (non-persistent), only use OOD jobs (sys/dashboard/...), limited to the job in the URL if one is given.
+      export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i %j" ${job_id:+--jobs="$job_id"} 2>/dev/null | grep '^[^ ]* sys/dashboard/' | head -n 1 | cut -d' ' -f1)"
       if [[ -n "$SLURM_JOB_ID" ]];then
         /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "env -u PROMPT_COMMAND srun --pty --overlap --resv-ports=0 --cpu-bind=none --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL' -il"
       else
