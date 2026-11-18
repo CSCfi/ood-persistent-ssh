@@ -42,8 +42,8 @@ if [[ -z "$(echo "$1" | grep '^roihu'  )" ]]; then
           /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "env -u PPROMPT_COMMAND srun --pty --overlap --resv-ports=0 --cpu-bind=none --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL'"
       fi
     else
-      # SSH to compute node (non-persistent)
-      export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i" | head -n 1)"
+      # SSH to compute node (non-persistent), only use OOD jobs (sys/dashboard/...)
+      export SLURM_JOB_ID="$(squeue --me --nodelist="$node" --noheader --format="%i %j" | grep '^[^ ]* sys/dashboard/' | head -n 1 | cut -d' ' -f1)"
       if [[ -n "$SLURM_JOB_ID" ]];then
         /usr/bin/ssh "$login_host" -F "$SSH_CONF" -tt "env -u PROMPT_COMMAND srun --pty --overlap --resv-ports=0 --cpu-bind=none --export=HOME,TERM --jobid='$SLURM_JOB_ID' --nodelist='$node' '$SHELL' -il"
       else
